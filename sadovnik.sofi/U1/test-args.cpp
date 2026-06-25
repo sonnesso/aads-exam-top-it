@@ -2,7 +2,7 @@
 
 #include "args.hpp"
 
-BOOST_AUTO_TEST_CASE(reject_too_many_arguments)
+BOOST_AUTO_TEST_CASE(reject_duplicate_in_argument)
 {
   const char * argv[] = {"lab", "in:a", "in:b"};
   sadovnik::paths_t paths;

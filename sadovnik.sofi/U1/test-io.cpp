@@ -59,6 +59,10 @@ BOOST_AUTO_TEST_CASE(empty_input_zero_counts)
   BOOST_TEST(data.ok_count == 0);
   BOOST_TEST(data.ignored_count == 0);
   BOOST_TEST(data.persons.empty());
+
+  std::ostringstream out;
+  sadovnik::writePersons(out, data.persons);
+  BOOST_TEST(out.str() == "\n");
 }
 
 BOOST_AUTO_TEST_CASE(write_persons_one_space)
@@ -75,13 +79,15 @@ BOOST_AUTO_TEST_CASE(write_persons_one_space)
   BOOST_TEST(out.str() == "31 The Agent\n");
 }
 
-BOOST_AUTO_TEST_CASE(ignore_id_stuck_to_text)
+BOOST_AUTO_TEST_CASE(read_id_without_space_before_info)
 {
-  std::istringstream in("100 ok\n100bad no\n");
+  std::istringstream in("31The Agent\n");
   const sadovnik::persons_data_t data = sadovnik::readPersons(in);
 
   BOOST_TEST(data.ok_count == 1);
-  BOOST_TEST(data.ignored_count == 1);
+  BOOST_TEST(data.ignored_count == 0);
+  BOOST_TEST((*data.persons.cbegin()).id == 31);
+  BOOST_TEST((*data.persons.cbegin()).info == "The Agent");
 }
 
 BOOST_AUTO_TEST_CASE(read_line_with_carriage_return)
@@ -93,4 +99,20 @@ BOOST_AUTO_TEST_CASE(read_line_with_carriage_return)
   BOOST_TEST(data.ignored_count == 0);
   BOOST_TEST(data.persons.size() == 1);
   BOOST_TEST((*data.persons.cbegin()).info == "Agent");
+}
+
+BOOST_AUTO_TEST_CASE(read_persons_skips_empty_lines)
+{
+  std::istringstream in(
+    "\n"
+    " \t\n"
+    "31 Mr. Bond\n"
+    "\n");
+
+  const sadovnik::persons_data_t data = sadovnik::readPersons(in);
+
+  BOOST_TEST(data.ok_count == 1);
+  BOOST_TEST(data.ignored_count == 0);
+  BOOST_TEST(data.persons.size() == 1);
+  BOOST_TEST((*data.persons.cbegin()).id == 31);
 }

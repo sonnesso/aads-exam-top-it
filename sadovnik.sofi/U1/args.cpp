@@ -29,12 +29,6 @@ namespace sadovnik
     paths.use_in_file = false;
     paths.use_out_file = false;
 
-    if (argc > 3)
-    {
-      std::cerr << "invalid arguments\n";
-      return 1;
-    }
-
     for (int i = 1; i < argc; ++i)
     {
       const std::string arg = argv[i];
@@ -42,13 +36,13 @@ namespace sadovnik
       {
         if (paths.use_in_file)
         {
-          std::cerr << "invalid arguments\n";
+          std::cerr << "Invalid arguments\n";
           return 1;
         }
         paths.in_file = takePath(arg, "in:");
         if (paths.in_file.empty())
         {
-          std::cerr << "invalid arguments\n";
+          std::cerr << "Invalid arguments\n";
           return 1;
         }
         paths.use_in_file = true;
@@ -57,20 +51,20 @@ namespace sadovnik
       {
         if (paths.use_out_file)
         {
-          std::cerr << "invalid arguments\n";
+          std::cerr << "Invalid arguments\n";
           return 1;
         }
         paths.out_file = takePath(arg, "out:");
         if (paths.out_file.empty())
         {
-          std::cerr << "invalid arguments\n";
+          std::cerr << "Invalid arguments\n";
           return 1;
         }
         paths.use_out_file = true;
       }
       else
       {
-        std::cerr << "invalid arguments\n";
+        std::cerr << "Invalid arguments\n";
         return 1;
       }
     }

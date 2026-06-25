@@ -56,12 +56,6 @@ namespace
       return false;
     }
 
-    if (pos < line.size()
-      && !std::isspace(static_cast<unsigned char>(line[pos])))
-    {
-      return false;
-    }
-
     return true;
   }
 
@@ -71,6 +65,16 @@ namespace
     {
       line.pop_back();
     }
+  }
+
+  bool isBlankLine(const std::string & line)
+  {
+    std::size_t pos = 0;
+    while (pos < line.size() && std::isspace(static_cast<unsigned char>(line[pos])))
+    {
+      ++pos;
+    }
+    return pos >= line.size();
   }
 
 }
@@ -88,6 +92,11 @@ namespace sadovnik
     while (std::getline(in, line))
     {
       dropCarriageReturn(line);
+
+      if (isBlankLine(line))
+      {
+        continue;
+      }
 
       std::size_t pos = 0;
       std::size_t id = 0;
@@ -122,6 +131,12 @@ namespace sadovnik
 
   void writePersons(std::ostream & out, const List< person_t > & persons)
   {
+    if (persons.empty())
+    {
+      out << '\n';
+      return;
+    }
+
     for (LCIter< person_t > it = persons.cbegin(); it != persons.cend(); ++it)
     {
       out << (*it).id << ' ' << (*it).info << '\n';
