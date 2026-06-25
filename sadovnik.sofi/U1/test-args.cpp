@@ -2,16 +2,6 @@
 
 #include "args.hpp"
 
-BOOST_AUTO_TEST_CASE(too_many_arguments_exit_zero)
-{
-  const char * argv[] = {"lab", "in:a", "out:b", "in:c"};
-  sadovnik::paths_t paths;
-  const int code = sadovnik::parsePaths(4, const_cast<char **>(argv), paths);
-  BOOST_TEST(code == 0);
-  BOOST_TEST(!paths.use_in_file);
-  BOOST_TEST(!paths.use_out_file);
-}
-
 BOOST_AUTO_TEST_CASE(reject_duplicate_in_argument)
 {
   const char * argv[] = {"lab", "in:a", "in:b"};

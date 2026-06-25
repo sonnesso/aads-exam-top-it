@@ -67,6 +67,16 @@ namespace
     }
   }
 
+  bool isBlankLine(const std::string & line)
+  {
+    std::size_t pos = 0;
+    while (pos < line.size() && std::isspace(static_cast<unsigned char>(line[pos])))
+    {
+      ++pos;
+    }
+    return pos >= line.size();
+  }
+
 }
 
 namespace sadovnik
@@ -82,6 +92,11 @@ namespace sadovnik
     while (std::getline(in, line))
     {
       dropCarriageReturn(line);
+
+      if (isBlankLine(line))
+      {
+        continue;
+      }
 
       std::size_t pos = 0;
       std::size_t id = 0;

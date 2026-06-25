@@ -8,11 +8,16 @@ int main(int argc, char * argv[])
 {
   using namespace sadovnik;
 
+  if (argc > 3)
+  {
+    std::cerr << "Too many arguments\n";
+    return 0;
+  }
+
   paths_t paths;
   const int parse_code = parsePaths(argc, argv, paths);
   if (parse_code != 0)
   {
-    std::cout << '\n';
     return parse_code;
   }
 
@@ -23,8 +28,7 @@ int main(int argc, char * argv[])
     in_file.open(paths.in_file);
     if (!in_file)
     {
-      std::cerr << "cannot open file\n";
-      std::cout << '\n';
+      std::cerr << "Cannot open input file\n";
       return 2;
     }
     in = &in_file;
@@ -43,8 +47,7 @@ int main(int argc, char * argv[])
     out_file.open(paths.out_file);
     if (!out_file)
     {
-      std::cerr << "cannot open file\n";
-      std::cout << '\n';
+      std::cerr << "Cannot open output file\n";
       return 2;
     }
     out = &out_file;

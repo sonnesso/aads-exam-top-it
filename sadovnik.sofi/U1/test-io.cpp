@@ -100,3 +100,19 @@ BOOST_AUTO_TEST_CASE(read_line_with_carriage_return)
   BOOST_TEST(data.persons.size() == 1);
   BOOST_TEST((*data.persons.cbegin()).info == "Agent");
 }
+
+BOOST_AUTO_TEST_CASE(read_persons_skips_empty_lines)
+{
+  std::istringstream in(
+    "\n"
+    " \t\n"
+    "31 Mr. Bond\n"
+    "\n");
+
+  const sadovnik::persons_data_t data = sadovnik::readPersons(in);
+
+  BOOST_TEST(data.ok_count == 1);
+  BOOST_TEST(data.ignored_count == 0);
+  BOOST_TEST(data.persons.size() == 1);
+  BOOST_TEST((*data.persons.cbegin()).id == 31);
+}
