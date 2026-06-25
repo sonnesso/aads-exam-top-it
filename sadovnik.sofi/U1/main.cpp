@@ -12,6 +12,7 @@ int main(int argc, char * argv[])
   const int parse_code = parsePaths(argc, argv, paths);
   if (parse_code != 0)
   {
+    std::cout << '\n';
     return parse_code;
   }
 
@@ -22,7 +23,8 @@ int main(int argc, char * argv[])
     in_file.open(paths.in_file);
     if (!in_file)
     {
-      std::cerr << "cannot open input file\n";
+      std::cerr << "cannot open file\n";
+      std::cout << '\n';
       return 2;
     }
     in = &in_file;
@@ -41,7 +43,8 @@ int main(int argc, char * argv[])
     out_file.open(paths.out_file);
     if (!out_file)
     {
-      std::cerr << "cannot open output file\n";
+      std::cerr << "cannot open file\n";
+      std::cout << '\n';
       return 2;
     }
     out = &out_file;

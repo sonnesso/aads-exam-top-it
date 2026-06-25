@@ -56,12 +56,6 @@ namespace
       return false;
     }
 
-    if (pos < line.size()
-      && !std::isspace(static_cast<unsigned char>(line[pos])))
-    {
-      return false;
-    }
-
     return true;
   }
 
@@ -122,6 +116,12 @@ namespace sadovnik
 
   void writePersons(std::ostream & out, const List< person_t > & persons)
   {
+    if (persons.empty())
+    {
+      out << '\n';
+      return;
+    }
+
     for (LCIter< person_t > it = persons.cbegin(); it != persons.cend(); ++it)
     {
       out << (*it).id << ' ' << (*it).info << '\n';
