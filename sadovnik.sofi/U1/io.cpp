@@ -51,7 +51,26 @@ namespace
       ++pos;
     }
 
-    return pos > start;
+    if (pos == start)
+    {
+      return false;
+    }
+
+    if (pos < line.size()
+      && !std::isspace(static_cast<unsigned char>(line[pos])))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  void dropCarriageReturn(std::string & line)
+  {
+    if (!line.empty() && line.back() == '\r')
+    {
+      line.pop_back();
+    }
   }
 
 }
@@ -68,6 +87,8 @@ namespace sadovnik
     std::string line;
     while (std::getline(in, line))
     {
+      dropCarriageReturn(line);
+
       std::size_t pos = 0;
       std::size_t id = 0;
       if (!parseId(line, pos, id))

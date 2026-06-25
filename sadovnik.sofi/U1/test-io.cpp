@@ -1,5 +1,4 @@
-#define BOOST_TEST_MODULE U1_IO
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "io.hpp"
 
@@ -34,4 +33,24 @@ BOOST_AUTO_TEST_CASE(write_persons_one_space)
   sadovnik::writePersons(out, persons);
 
   BOOST_TEST(out.str() == "31 The Agent\n");
+}
+
+BOOST_AUTO_TEST_CASE(ignore_id_stuck_to_text)
+{
+  std::istringstream in("100 ok\n100bad no\n");
+  const sadovnik::persons_data_t data = sadovnik::readPersons(in);
+
+  BOOST_TEST(data.ok_count == 1);
+  BOOST_TEST(data.ignored_count == 1);
+}
+
+BOOST_AUTO_TEST_CASE(read_line_with_carriage_return)
+{
+  std::istringstream in("31 Agent\r\n");
+  const sadovnik::persons_data_t data = sadovnik::readPersons(in);
+
+  BOOST_TEST(data.ok_count == 1);
+  BOOST_TEST(data.ignored_count == 0);
+  BOOST_TEST(data.persons.size() == 1);
+  BOOST_TEST((*data.persons.cbegin()).info == "Agent");
 }
