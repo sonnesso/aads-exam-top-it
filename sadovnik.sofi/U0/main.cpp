@@ -1,9 +1,9 @@
-#include "credentials.hpp"
+#include "identity.hpp"
 
 #include <iostream>
 
 int main()
 {
-  sadovnik::outCredentials(std::cout) << '\n';
+  sadovnik::printIdentity(std::cout);
   return 0;
 }
