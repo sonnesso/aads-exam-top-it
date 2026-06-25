@@ -21,3 +21,19 @@ BOOST_AUTO_TEST_CASE(accept_in_and_out_in_any_order)
   BOOST_TEST(paths.in_file == "in.txt");
   BOOST_TEST(paths.out_file == "out.txt");
 }
+
+BOOST_AUTO_TEST_CASE(reject_unknown_argument)
+{
+  const char * argv[] = {"lab", "bad:file.txt"};
+  sadovnik::paths_t paths;
+  const int code = sadovnik::parsePaths(2, const_cast<char **>(argv), paths);
+  BOOST_TEST(code == 1);
+}
+
+BOOST_AUTO_TEST_CASE(reject_empty_path_after_colon)
+{
+  const char * argv[] = {"lab", "in:"};
+  sadovnik::paths_t paths;
+  const int code = sadovnik::parsePaths(2, const_cast<char **>(argv), paths);
+  BOOST_TEST(code == 1);
+}
