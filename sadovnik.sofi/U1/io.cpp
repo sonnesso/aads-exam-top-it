@@ -17,31 +17,86 @@ namespace
     return text.substr(pos);
   }
 
+  bool hasId(const sadovnik::List< sadovnik::person_t > & persons, std::size_t id)
+  {
+    for (sadovnik::LCIter< sadovnik::person_t > it = persons.cbegin();
+      it != persons.cend();
+      ++it)
+    {
+      if ((*it).id == id)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool parseId(const std::string & line, std::size_t & pos, std::size_t & id)
+  {
+    while (pos < line.size() && std::isspace(static_cast<unsigned char>(line[pos])))
+    {
+      ++pos;
+    }
+
+    if (pos >= line.size())
+    {
+      return false;
+    }
+
+    const std::size_t start = pos;
+    id = 0;
+    while (pos < line.size() && std::isdigit(static_cast<unsigned char>(line[pos])))
+    {
+      id = id * 10 + static_cast<std::size_t>(line[pos] - '0');
+      ++pos;
+    }
+
+    return pos > start;
+  }
+
 }
 
 namespace sadovnik
 {
 
-  List< person_t > readPersons(std::istream & in)
+  persons_data_t readPersons(std::istream & in)
   {
-    List< person_t > persons;
-    std::size_t id = 0;
+    persons_data_t data;
+    data.ok_count = 0;
+    data.ignored_count = 0;
 
-    while (in >> id)
+    std::string line;
+    while (std::getline(in, line))
     {
-      std::string line;
-      if (!std::getline(in, line))
+      std::size_t pos = 0;
+      std::size_t id = 0;
+      if (!parseId(line, pos, id))
       {
-        break;
+        ++data.ignored_count;
+        continue;
+      }
+
+      const std::string info = trimStart(line.substr(pos));
+      if (info.empty())
+      {
+        ++data.ignored_count;
+        continue;
+      }
+
+      if (hasId(data.persons, id))
+      {
+        ++data.ignored_count;
+        continue;
       }
 
       person_t person;
       person.id = id;
-      person.info = trimStart(line);
-      persons.pushBack(person);
+      person.info = info;
+      data.persons.pushBack(person);
+      ++data.ok_count;
     }
 
-    return persons;
+    return data;
   }
 
   void writePersons(std::ostream & out, const List< person_t > & persons)

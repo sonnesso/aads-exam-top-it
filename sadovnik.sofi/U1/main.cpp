@@ -6,8 +6,8 @@ int main()
 {
   using namespace sadovnik;
 
-  List< person_t > persons = readPersons(std::cin);
-  writePersons(std::cout, persons);
-  std::cerr << persons.size() << " 0\n";
+  const persons_data_t data = readPersons(std::cin);
+  writePersons(std::cout, data.persons);
+  std::cerr << data.ok_count << ' ' << data.ignored_count << '\n';
   return 0;
 }
